@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -14,13 +18,14 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local')
 const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
-require('dotenv').config();
+
+
 const MAP_KEY = process.env.MAP_KEY;
 module.exports = {
     MAP_KEY: process.env.MAP_KEY
 }
 
-const dbUrl = 'mongodb://127.0.0.1:27017/gymExpress';
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gymExpress';
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
@@ -82,8 +87,6 @@ app.use('/', userRoutes);
 app.use('/gyms', gymRoutes);
 app.use('/gyms/:id/reviews', reviewRoutes);
 
-//mongodb+srv://eliagiang1:lQmqZeYBELRvJNnd@cluster0.8bdscyq.mongodb.net/
-
 async function main() {
     await mongoose.connect(dbUrl);
     console.log("Database connected!");
@@ -105,6 +108,7 @@ app.use((err, req, res, next) => {
 
 });
 
-app.listen(3000, () => {
-    console.log('SERVER RUNNING');
+const port = proces.env.PORT || 3000
+app.listen(port, () => {
+    console.log(`SERVER RUNNING - Port:${port}`);
 });
