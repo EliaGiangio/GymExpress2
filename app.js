@@ -27,7 +27,7 @@ module.exports = {
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gymExpress';
 
-const store = MongoStore.create({
+const store = new MongoStore({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
