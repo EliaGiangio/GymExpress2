@@ -1,0 +1,11 @@
+Project goals and features
+
+- Full CRUD, Routing and Error handling with Express
+- Use of MongoDB through Mongoose (and interaction between multiple schemas)
+- Usage of middlewares for express
+- Usage of passport (local startegy only) for Auth
+- Understanding the real life use of asyinc/await in JS
+- Add server side validation for DB Objects with Joi 
+- Use of Cookies and Session to manage users login + understanding the use and possibilities
+- Practice with Bootstrap
+- Use of Flash to display messages

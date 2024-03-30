@@ -1,0 +1,58 @@
+<%- layout('/layouts/boilerplate') %>
+    <div id="my-map" style="height: 500px; width:100%"></div>
+    <h1>Where are you going?</h1>
+    <% for (let gym of gyms) {%>
+        <div class="card mb-3" id="main-div" data-lat="<%= gym.coordinates.lat %>" data-lon="<%= gym.coordinates.lon %>"
+            data-name="<%= gym.title %>">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-fluid" src="<%= gym.image %>">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= gym.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= gym.description %>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <%= gym.location %>
+                            </small>
+                        </p>
+                        <a href="/gyms/<%= gym._id %>" class="btn btn-primary"> View <%= gym.title %></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+                const lat = parseFloat(document.getElementById('main-div').getAttribute('data-lat'));
+                const lon = parseFloat(document.getElementById('main-div').getAttribute('data-lon'));
+                const map = L.map('my-map').setView([54.5260, 15.2551], 3);
+                const isRetina = L.Browser.retina;
+                const baseUrl = "https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=ea073aab05ac476d814b41d32ba9eeee";
+                const retinaUrl = "https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}@2x.png?apiKey=ea073aab05ac476d814b41d32ba9eeee";
+                L.tileLayer(isRetina ? retinaUrl : baseUrl, {
+                    attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
+                    maxZoom: 20,
+                    id: 'osm-bright'
+                }).addTo(map);
+
+                document.querySelectorAll('.card').forEach((card) => {
+                    const name = card.getAttribute('data-name');
+                    const lat = parseFloat(card.getAttribute('data-lat'));
+                    const lon = parseFloat(card.getAttribute('data-lon'));
+                    const markerIcon = L.icon({
+                        iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=awesome&color=%233e9cfe&apiKey=ea073aab05ac476d814b41d32ba9eeee`,
+                        iconSize: [31, 46],
+                        iconAnchor: [15.5, 42],
+                        popupAnchor: [0, -45]
+                    });
+                    const markerPopup = L.popup().setContent(name);
+                    const marker = L.marker([lat, lon], { icon: markerIcon }).bindPopup(markerPopup).addTo(map);
+                });
+            </script>
